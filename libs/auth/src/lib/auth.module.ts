@@ -3,10 +3,13 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { AuthController } from './auth.controller';
+import { UsersModule } from '@chat-app/users';
 
 @Module({
   imports: [
     ConfigModule,
+    UsersModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       inject: [ConfigService],
@@ -16,7 +19,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       }),
     }),
   ],
-  controllers: [],
+  controllers: [AuthController],
   providers: [JwtStrategy],
   exports: [PassportModule, JwtModule],
 })
