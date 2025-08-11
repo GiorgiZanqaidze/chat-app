@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: apps/chat-app/Dockerfile
+    container_name: chat-backend
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/chat-app?authSource=admin
+      - REDIS_URI=redis://redis:6379
+      - RABBITMQ_URI=amqp://admin:password@rabbitmq:5672
+      - RABBITMQ_QUEUE=chat_messages
+    depends_on:
+      - mongodb
+      - redis
+      - rabbitmq
+    ports:
+      - '3000:3000'
+    networks:
+      - chat-network
+
+  mongodb:
+    image: mongo:6.0
+    container_name: chat-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - '27017:27017'
+    networks:
+      - chat-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: chat-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    ports:
+      - '6379:6379'
+    networks:
+      - chat-network
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: chat-rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: password
+    ports:
+      - '5672:5672'
+      - '15672:15672' # management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - chat-network
+
+volumes:
+  mongodb_data:
+  redis_data:
+  rabbitmq_data:
+
+networks:
+  chat-network:
+    driver: bridge
+
+

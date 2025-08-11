@@ -1,0 +1,92 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Chat App (Dev)",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build", "chat-app", "--configuration=development"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$tsc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      }
+    },
+    {
+      "label": "Build Chat App (Prod)",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "build", "chat-app", "--configuration=production"],
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      }
+    },
+    {
+      "label": "Serve Chat App (Dev)",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "chat-app", "--configuration=development"],
+      "isBackground": false,
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve Chat App (Prod)",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "chat-app", "--configuration=production"],
+      "isBackground": false,
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve Chat App (Debug)",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "serve", "chat-app", "--configuration=debug"],
+      "isBackground": false,
+      "problemMatcher": []
+    },
+    {
+      "label": "Lint Chat App",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "lint", "chat-app"],
+      "group": "test",
+      "problemMatcher": ["$eslint-stylish"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      }
+    },
+    {
+      "label": "Test Chat App",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "test", "chat-app"],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test Chat App (CI)",
+      "type": "shell",
+      "command": "npx",
+      "args": ["nx", "test", "chat-app", "--configuration=ci"],
+      "group": "test",
+      "problemMatcher": []
+    }
+  ]
+}
+
+

@@ -14,7 +14,9 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@chat-app/backend-infra": ["libs/backend-infra/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

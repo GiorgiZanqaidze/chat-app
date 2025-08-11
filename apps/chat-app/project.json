@@ -35,6 +35,10 @@
         },
         "production": {
           "buildTarget": "chat-app:build:production"
+        },
+        "debug": {
+          "buildTarget": "chat-app:build:development",
+          "inspect": true
         }
       }
     },
