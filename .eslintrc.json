@@ -5,6 +5,15 @@
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "parserOptions": {
+        "project": [
+          "tsconfig.eslint.json",
+          "apps/chat-app/tsconfig.app.json",
+          "libs/auth/tsconfig.lib.json",
+          "libs/chats/tsconfig.lib.json",
+          "libs/backend-infra/tsconfig.lib.json"
+        ]
+      },
       "rules": {
         "@nx/enforce-module-boundaries": [
           "error",
