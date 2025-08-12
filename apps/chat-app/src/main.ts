@@ -6,12 +6,45 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestFactory } from '@nestjs/core';
+import { WinstonModule, utilities as nestWinstonModuleUtilities } from 'nest-winston';
+import { format as winstonFormat, transports as winstonTransports } from 'winston';
+import { Request, Response, NextFunction } from 'express';
 
 import { AppModule } from './app/app.module';
 // Microservice bootstrap for RabbitMQ can be added later if needed
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const winstonLogger = WinstonModule.createLogger({
+    level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+    transports: [
+      new winstonTransports.Console({
+        format: winstonFormat.combine(
+          winstonFormat.timestamp(),
+          winstonFormat.ms(),
+          nestWinstonModuleUtilities.format.nestLike('Chat App', {
+            colors: true,
+            prettyPrint: true,
+          })
+        ),
+      }),
+    ],
+  });
+
+  const app = await NestFactory.create(AppModule, { logger: winstonLogger });
+  // HTTP request logging
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    const start = Date.now();
+    const { method, originalUrl } = req;
+    res.on('finish', () => {
+      const { statusCode } = res;
+      const durationMs = Date.now() - start;
+      winstonLogger.log(
+        `${method} ${originalUrl} ${statusCode} - ${durationMs}ms`,
+        'HTTP'
+      );
+    });
+    next();
+  });
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
